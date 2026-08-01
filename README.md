@@ -1,4 +1,4 @@
-# Metrix-Lab
+# Kpix-Analytics
 
 # Painel de Consumo de Materiais - Produzido por IA
 
