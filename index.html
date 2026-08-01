@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel de Consumo de Materiais</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">◆</span>
+    <div>
+      <h1>Painel de Consumo</h1>
+      <p>Análise inteligente de materiais</p>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <label class="file-btn" for="fileInput">
+      <span>Importar planilha</span>
+      <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" hidden>
+    </label>
+    <span id="fileStatus" class="file-status"></span>
+  </div>
+</header>
+
+<main id="app">
+
+  <!-- Empty state -->
+  <section id="emptyState" class="empty-state">
+    <div class="empty-glyph">▤</div>
+    <h2>Nenhuma planilha carregada</h2>
+    <p>Envie um arquivo .csv, .xlsx ou .xls com dados de consumo de materiais para gerar o painel.</p>
+    <p class="empty-hint">Colunas reconhecidas automaticamente: Material, Quantidade, Data, Setor (Origem/Destino), Valor.</p>
+  </section>
+
+  <!-- Error state -->
+  <section id="errorState" class="error-state" style="display:none">
+    <div class="error-glyph">!</div>
+    <h2>Não foi possível reconhecer a planilha</h2>
+    <p id="errorMessage"></p>
+  </section>
+
+  <!-- Dashboard -->
+  <div id="dashboard" style="display:none">
+
+    <!-- Filters -->
+    <section class="filters">
+      <div class="filter-group">
+        <label>Produto</label>
+        <select id="filterProduto"><option value="">Todos</option></select>
+      </div>
+      <div class="filter-group">
+        <label>Setor</label>
+        <select id="filterSetor"><option value="">Todos</option></select>
+      </div>
+      <div class="filter-group">
+        <label>Data inicial</label>
+        <input type="date" id="filterDataIni">
+      </div>
+      <div class="filter-group">
+        <label>Data final</label>
+        <input type="date" id="filterDataFim">
+      </div>
+      <div class="filter-group filter-search">
+        <label>Pesquisar</label>
+        <input type="text" id="filterBusca" placeholder="produto, setor...">
+      </div>
+      <button id="clearFilters" class="ghost-btn">Limpar filtros</button>
+    </section>
+
+    <!-- KPIs -->
+    <section class="kpi-grid" id="kpiGrid"></section>
+
+    <!-- Charts row 1 -->
+    <section class="charts-row">
+      <div class="card chart-card chart-wide">
+        <div class="card-head">
+          <h3>Evolução do consumo</h3>
+          <span class="card-sub">Total por mês</span>
+        </div>
+        <canvas id="chartEvolucao"></canvas>
+      </div>
+      <div class="card chart-card">
+        <div class="card-head">
+          <h3>Participação por setor</h3>
+          <span class="card-sub">% do volume total</span>
+        </div>
+        <canvas id="chartSetor"></canvas>
+      </div>
+    </section>
+
+    <!-- Charts row 2 -->
+    <section class="charts-row">
+      <div class="card chart-card">
+        <div class="card-head">
+          <h3>Ranking de produtos</h3>
+          <span class="card-sub">Top 10 mais consumidos</span>
+        </div>
+        <canvas id="chartRankingProdutos"></canvas>
+      </div>
+      <div class="card chart-card">
+        <div class="card-head">
+          <h3>Comparação entre setores</h3>
+          <span class="card-sub">Volume total</span>
+        </div>
+        <canvas id="chartComparaSetor"></canvas>
+      </div>
+    </section>
+
+    <!-- Alerts -->
+    <section class="card alerts-card">
+      <div class="card-head">
+        <h3>Alertas de variação</h3>
+        <span class="card-sub">Maiores aumentos e quedas entre meses consecutivos</span>
+      </div>
+      <div id="alertsList" class="alerts-list"></div>
+    </section>
+
+    <!-- Table -->
+    <section class="card table-card">
+      <div class="card-head">
+        <h3>Movimentações</h3>
+        <span class="card-sub" id="tableCount"></span>
+      </div>
+      <div class="table-wrap">
+        <table id="dataTable">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Material</th>
+              <th>Setor</th>
+              <th>Qte</th>
+              <th>Unidade</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="dataTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
