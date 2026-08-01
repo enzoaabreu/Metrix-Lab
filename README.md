@@ -62,7 +62,6 @@ Basta abrir o `index.html` em qualquer navegador moderno (não precisa de servid
 | Valor         | Valor                                         |
 | Total         | Total, Valor Total                            |
 | Responsável   | Responsável                                   |
-|---------------|-----------------------------------------------|
 
 > Produto, Quantidade e Data são obrigatórios — os demais campos são opcionais e, se ausentes, o dashboard segue funcionando sem eles.
 
